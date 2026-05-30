@@ -23,7 +23,7 @@ public static class ElasticsearchSetup
         new() { Id = Guid.NewGuid().ToString(), FirstName = "Hayley",  LastName = "Walker-Smith", FullName = "Hayley Walker-Smith",JobTitle = "Developer",                    Phone = "07888 932145", Email = "hwalker@test.com" },
         new() { Id = Guid.NewGuid().ToString(), FirstName = "Alexis",  LastName = "Crawley",      FullName = "Alexis Crawley",     JobTitle = "DevOps Engineer",              Phone = "07778 667412", Email = "acrawley@test.com" },
         new() { Id = Guid.NewGuid().ToString(), FirstName = "David",   LastName = "Gold",         FullName = "David Gold",         JobTitle = "DevOps Engineer",              Phone = "07768 479563", Email = "dgold@test.com" },
-        new() { Id = Guid.NewGuid().ToString(), FirstName = "Phillipa",LastName = "Walker",       FullName = "Phillipa Walker",    JobTitle = "QA Lead",                      Phone = "07775 357951", Email = "pwalker2@test.com" },
+        new() { Id = Guid.NewGuid().ToString(), FirstName = "Phillipa",LastName = "Walker",       FullName = "Phillipa Walker",    JobTitle = "QA Lead",                      Phone = "07775 357951", Email = "pwalker2@test.com" }
     ];
 
     public static async Task EnsureIndexAsync(ElasticsearchClient client, ILogger logger)

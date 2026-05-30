@@ -54,6 +54,7 @@ export function SearchBar({ query, suggestions, onChange, onSearch, onSelect }: 
       {open && suggestions.length > 0 && (
         <AutocompleteDropdown
           items={suggestions}
+          query={query}
           onSelect={handleSelect}
         />
       )}

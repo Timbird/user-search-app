@@ -22,6 +22,19 @@
     &:hover {
       background: #e6235c;
       color: #fff;
+
+      .autocomplete-dropdown__highlight {
+        background: transparent;
+        color: #fff;
+        text-decoration: underline;
+      }
     }
+  }
+
+  &__highlight {
+    background: #ffe600;
+    color: inherit;
+    padding: 0;
+    border-radius: 2px;
   }
 }

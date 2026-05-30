@@ -20,6 +20,7 @@ export default function App() {
 
   return (
     <div className={`app${hasSearched ? ' app--searched' : ''}`}>
+      <div className="app__spacer" />
       <div className="app__search-section">
         <div className="app__container">
           <SearchBar
