@@ -1,12 +1,12 @@
 # User Search App
 
-A full-stack user search application built as a technical assessment.
+A full-stack user search application.
 
 ## Tech Stack
 
 - **Frontend:** React 18 + TypeScript + SCSS (Vite)
-- **Backend:** .NET 8 Web API (C#)
-- **Search:** Elasticsearch 8 — edge_ngram analyzer for word-level prefix matching
+- **Backend:** .NET 10 Web API (C#)
+- **Search:** Elasticsearch 9 — edge_ngram analyzer for word-level prefix matching
 
 ## Features
 
@@ -18,7 +18,7 @@ A full-stack user search application built as a technical assessment.
 ## Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download) (for local dev only)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) (for local dev only)
 - [Node 20+](https://nodejs.org/) (for local dev only)
 
 ## Running with Docker Compose (recommended)

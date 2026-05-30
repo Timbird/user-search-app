@@ -15,6 +15,7 @@ export function Toast({ message, onDismiss }: Props) {
   return (
     <div className="toast" role="status">
       {message}
+      <button className="toast__close" onClick={onDismiss} aria-label="Dismiss">✕</button>
     </div>
   );
 }

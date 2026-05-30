@@ -14,31 +14,38 @@ export function NewUserForm({ onSuccess, onClose }: Props) {
       onClose();
     });
 
-  const fields: { label: string; key: keyof typeof form; type?: string; placeholder?: string }[] = [
-    { label: 'First name', key: 'firstName', placeholder: 'First name' },
-    { label: 'Last name', key: 'lastName', placeholder: 'Last name' },
-    { label: 'Job title', key: 'jobTitle', placeholder: 'Job title' },
-    { label: 'Phone', key: 'phone', placeholder: 'e.g. 07789 543768' },
-    { label: 'Email', key: 'email', type: 'email', placeholder: 'Email' },
+  const topRow: { key: keyof typeof form; placeholder: string }[] = [
+    { key: 'firstName', placeholder: 'First name' },
+    { key: 'lastName',  placeholder: 'Last name' },
   ];
+
+  const bottomRow: { key: keyof typeof form; placeholder: string; type?: string }[] = [
+    { key: 'jobTitle', placeholder: 'Job title' },
+    { key: 'phone',    placeholder: 'e.g. 07789 543768' },
+    { key: 'email',    placeholder: 'Email', type: 'email' },
+  ];
+
+  const renderField = (key: keyof typeof form, placeholder: string, type = 'text') => (
+    <div className="new-user-form__field" key={key}>
+      <input
+        className={`new-user-form__input${errors[key] ? ' new-user-form__input--error' : ''}`}
+        type={type}
+        placeholder={placeholder}
+        value={form[key]}
+        onChange={e => handleChange(key, e.target.value)}
+      />
+      {errors[key] && <span className="new-user-form__error">{errors[key]}</span>}
+    </div>
+  );
 
   return (
     <div className="new-user-form">
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="new-user-form__fields">
-          {fields.map(({ label, key, type, placeholder }) => (
-            <div className="new-user-form__field" key={key}>
-              <label className="new-user-form__label">{label}</label>
-              <input
-                className={`new-user-form__input${errors[key] ? ' new-user-form__input--error' : ''}`}
-                type={type ?? 'text'}
-                placeholder={placeholder}
-                value={form[key]}
-                onChange={e => handleChange(key, e.target.value)}
-              />
-              {errors[key] && <span className="new-user-form__error">{errors[key]}</span>}
-            </div>
-          ))}
+<form onSubmit={handleSubmit} noValidate>
+        <div className="new-user-form__row">
+          {topRow.map(({ key, placeholder }) => renderField(key, placeholder))}
+        </div>
+        <div className="new-user-form__row">
+          {bottomRow.map(({ key, placeholder, type }) => renderField(key, placeholder, type))}
         </div>
 
         {serverError && <p className="new-user-form__server-error">{serverError}</p>}
@@ -46,9 +53,6 @@ export function NewUserForm({ onSuccess, onClose }: Props) {
         <div className="new-user-form__actions">
           <button type="submit" className="new-user-form__btn new-user-form__btn--primary" disabled={submitting}>
             {submitting ? 'Creating...' : 'Create'}
-          </button>
-          <button type="button" className="new-user-form__btn new-user-form__btn--secondary" onClick={() => { reset(); onClose(); }}>
-            Cancel
           </button>
         </div>
       </form>

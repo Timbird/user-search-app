@@ -1,41 +1,43 @@
 .new-user-form {
-  margin-top: 24px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  margin: 24px;
+  background: #ffffff;
+  border: 1px solid #e6235c;
   border-radius: 8px;
   padding: 24px;
+  z-index: 10;
 
-  &__fields {
+  &__row {
     display: flex;
-    flex-wrap: wrap;
     gap: 16px;
     align-items: flex-start;
+
+    & + & {
+      margin-top: 12px;
+    }
   }
 
   &__field {
     display: flex;
     flex-direction: column;
-    min-width: 160px;
     flex: 1;
-  }
-
-  &__label {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 4px;
-    font-weight: 500;
   }
 
   &__input {
     padding: 8px 12px;
     font-size: 0.9rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+    border: 1px solid #555;
+    border-radius: 10px;
     outline: none;
+    background: #ffffff;
+    color: #111;
     transition: border-color 0.2s;
 
+    &::placeholder {
+      color: #000000;
+    }
+
     &:focus {
-      border-color: #2563eb;
+      border-color: #e6235c;
     }
 
     &--error {
@@ -57,7 +59,7 @@
 
   &__actions {
     display: flex;
-    gap: 10px;
+    justify-content: center;
     margin-top: 20px;
   }
 
@@ -71,25 +73,16 @@
     transition: background 0.2s;
 
     &--primary {
-      background: #2563eb;
+      background: #e6235c;
       color: #fff;
 
       &:hover:not(:disabled) {
-        background: #1d4ed8;
+        background: #c71d4f;
       }
 
       &:disabled {
         opacity: 0.6;
         cursor: default;
-      }
-    }
-
-    &--secondary {
-      background: #e5e7eb;
-      color: #374151;
-
-      &:hover {
-        background: #d1d5db;
       }
     }
   }

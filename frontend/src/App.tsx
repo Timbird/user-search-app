@@ -19,39 +19,41 @@ export default function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app__header">
+    <div className={`app${hasSearched ? ' app--searched' : ''}`}>
+      <div className="app__search-section">
         <div className="app__container">
-          <div className="app__top-bar">
-            <SearchBar
-              query={query}
-              suggestions={suggestions}
-              onChange={setQuery}
-              onSearch={runSearch}
-              onSelect={selectSuggestion}
-            />
-            <button
-              className="app__new-user-btn"
-              onClick={() => setShowForm(f => !f)}
-            >
-              {showForm ? 'Cancel' : 'New User +'}
-            </button>
-          </div>
-
-          {showForm && (
-            <NewUserForm
-              onSuccess={handleUserCreated}
-              onClose={() => setShowForm(false)}
-            />
-          )}
+          <SearchBar
+            query={query}
+            suggestions={suggestions}
+            onChange={setQuery}
+            onSearch={runSearch}
+            onSelect={selectSuggestion}
+          />
         </div>
-      </header>
+      </div>
 
       <main className="app__main">
         <div className="app__container">
           <UserCardList users={results} hasSearched={hasSearched} />
         </div>
       </main>
+
+      <div className="app__bottom">
+        <div className="app__container">
+          {showForm && (
+            <NewUserForm
+              onSuccess={handleUserCreated}
+              onClose={() => setShowForm(false)}
+            />
+          )}
+          <button
+            className="app__new-user-btn"
+            onClick={() => setShowForm(f => !f)}
+          >
+            {showForm ? 'Cancel' : 'New User +'}
+          </button>
+        </div>
+      </div>
 
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </div>

@@ -11,7 +11,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
     public async Task<IEnumerable<string>> AutocompleteAsync(string query)
     {
         var response = await client.SearchAsync<UserDocument>(s => s
-            .Index(IndexName)
+            .Indices(IndexName)
             .Size(10)
             .Query(q => q
                 .MultiMatch(mm => mm
@@ -30,7 +30,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
     public async Task<IEnumerable<User>> SearchAsync(string query)
     {
         var response = await client.SearchAsync<UserDocument>(s => s
-            .Index(IndexName)
+            .Indices(IndexName)
             .Size(50)
             .Query(q => q
                 .MultiMatch(mm => mm
@@ -47,7 +47,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
     public async Task<bool> ExistsByEmailAsync(string email)
     {
         var response = await client.SearchAsync<UserDocument>(s => s
-            .Index(IndexName)
+            .Indices(IndexName)
             .Size(1)
             .Query(q => q
                 .Term(t => t
