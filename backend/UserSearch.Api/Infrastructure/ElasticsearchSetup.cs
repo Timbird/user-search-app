@@ -29,7 +29,7 @@ public static class ElasticsearchSetup
     public static async Task EnsureIndexAsync(ElasticsearchClient client, ILogger logger)
     {
         var existsResponse = await client.Indices.ExistsAsync(IndexName);
-        if (!existsResponse.Exists)
+        if (!existsResponse.IsValidResponse)
         {
             logger.LogInformation("Creating Elasticsearch index '{Index}'", IndexName);
             await client.Indices.CreateAsync(IndexName, c => c
@@ -73,13 +73,12 @@ public static class ElasticsearchSetup
             );
         }
 
-        var countResponse = await client.CountAsync<UserDocument>(c => c.Index(IndexName));
+        var countResponse = await client.CountAsync(new CountRequest(IndexName));
         if (countResponse.Count == 0)
         {
             logger.LogInformation("Seeding {Count} users into Elasticsearch", SeedUsers.Length);
             var bulkResponse = await client.BulkAsync(b => b
-                .Index(IndexName)
-                .IndexMany(SeedUsers)
+                .IndexMany(SeedUsers, (op, doc) => op.Index(IndexName).Id(doc.Id))
             );
 
             if (bulkResponse.Errors)

@@ -65,10 +65,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
         user.Id = Guid.NewGuid().ToString();
         var doc = UserDocument.FromUser(user);
 
-        await client.IndexAsync(doc, i => i
-            .Index(IndexName)
-            .Id(doc.Id)
-        );
+        await client.IndexAsync(new IndexRequest<UserDocument>(doc, IndexName, doc.Id));
 
         return user;
     }

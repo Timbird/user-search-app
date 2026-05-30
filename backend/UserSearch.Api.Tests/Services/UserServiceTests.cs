@@ -1,4 +1,5 @@
 using Moq;
+using Xunit;
 using UserSearch.Api.Models;
 using UserSearch.Api.Repositories;
 using UserSearch.Api.Services;
