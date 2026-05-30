@@ -1,4 +1,5 @@
 using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Core.Search;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using UserSearch.Api.Models;
 
@@ -13,10 +14,11 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
         var response = await client.SearchAsync<UserDocument>(s => s
             .Indices(IndexName)
             .Size(10)
+            .Source(s => s.Filter(f => f.Includes(d => d.FirstName, d => d.LastName)))
             .Query(q => q
                 .MultiMatch(mm => mm
                     .Query(query)
-                    .Fields(new[] { "firstName", "lastName", "fullName" })
+                    .Fields(f => f.FirstName, f => f.LastName, f => f.FullName)
                     .Type(TextQueryType.MostFields)
                 )
             )
@@ -35,7 +37,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
             .Query(q => q
                 .MultiMatch(mm => mm
                     .Query(query)
-                    .Fields(new[] { "firstName", "lastName", "fullName" })
+                    .Fields(f => f.FirstName, f => f.LastName, f => f.FullName)
                     .Type(TextQueryType.MostFields)
                 )
             )

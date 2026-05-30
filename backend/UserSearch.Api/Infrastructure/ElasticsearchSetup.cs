@@ -28,61 +28,89 @@ public static class ElasticsearchSetup
 
     public static async Task EnsureIndexAsync(ElasticsearchClient client, ILogger logger)
     {
-        var existsResponse = await client.Indices.ExistsAsync(IndexName);
-        if (!existsResponse.IsValidResponse)
-        {
-            logger.LogInformation("Creating Elasticsearch index '{Index}'", IndexName);
-            await client.Indices.CreateAsync(IndexName, c => c
-                .Settings(s => s
-                    .Analysis(a => a
-                        .Analyzers(an => an
-                            .Custom("name_autocomplete", ca => ca
-                                .Tokenizer("standard")
-                                .Filter(["lowercase", "name_edge_ngram"])
-                            )
-                            .Custom("name_search", ca => ca
-                                .Tokenizer("standard")
-                                .Filter(["lowercase"])
-                            )
-                        )
-                        .TokenFilters(tf => tf
-                            .EdgeNGram("name_edge_ngram", eng => eng
-                                .MinGram(2)
-                                .MaxGram(20)
-                            )
-                        )
-                    )
-                )
-                .Mappings(m => m
-                    .Properties<UserDocument>(p => p
-                        .Keyword(k => k.Id)
-                        .Text(t => t.FirstName, cfg => cfg
-                            .Analyzer("name_autocomplete")
-                            .SearchAnalyzer("name_search"))
-                        .Text(t => t.LastName, cfg => cfg
-                            .Analyzer("name_autocomplete")
-                            .SearchAnalyzer("name_search"))
-                        .Text(t => t.FullName, cfg => cfg
-                            .Analyzer("name_autocomplete")
-                            .SearchAnalyzer("name_search"))
-                        .Keyword(k => k.JobTitle)
-                        .Keyword(k => k.Phone)
-                        .Keyword(k => k.Email)
-                    )
-                )
-            );
-        }
+        await CreateIndexIfNullAsync(client, logger);
+        await SeedIfEmptyAsync(client, logger);
+    }
 
+    private static async Task CreateIndexIfNullAsync(ElasticsearchClient client, ILogger logger)
+    {
+        if (await client.Indices.ExistsAsync(IndexName) is { Exists: true })
+        {
+            logger.LogInformation("Index '{Index}' already exists — skipping creation.", IndexName);
+            return;
+        }
+        logger.LogInformation("Creating Elasticsearch index '{Index}'.", IndexName);
+
+        var createResponse = await client.Indices.CreateAsync(new CreateIndexRequest(IndexName)
+        {
+            Settings = new IndexSettings
+            {
+                Analysis = new IndexSettingsAnalysis
+                {
+                    Analyzers = new Analyzers
+                    {
+                        ["name_autocomplete"] = new CustomAnalyzer
+                        {
+                            Tokenizer = "standard",
+                            Filter = ["lowercase", "name_edge_ngram"]
+                        },
+                        ["name_search"] = new CustomAnalyzer
+                        {
+                            Tokenizer = "standard",
+                            Filter = ["lowercase"]
+                        }
+                    },
+                    TokenFilters = new TokenFilters
+                    {
+                        ["name_edge_ngram"] = new EdgeNGramTokenFilter
+                        {
+                            MinGram = 2,
+                            MaxGram = 20
+                        }
+                    }
+                }
+            },
+            Mappings = new TypeMapping
+            {
+                Properties = new Properties
+                {
+                    ["id"]        = new KeywordProperty(),
+                    ["firstName"] = new TextProperty { Analyzer = "name_autocomplete", SearchAnalyzer = "name_search" },
+                    ["lastName"]  = new TextProperty { Analyzer = "name_autocomplete", SearchAnalyzer = "name_search" },
+                    ["fullName"]  = new TextProperty { Analyzer = "name_autocomplete", SearchAnalyzer = "name_search" },
+                    ["jobTitle"]  = new KeywordProperty(),
+                    ["phone"]     = new KeywordProperty(),
+                    ["email"]     = new KeywordProperty()
+                }
+            }
+        });
+
+        if (!createResponse.IsValidResponse)
+            throw new Exception($"Failed to create index '{IndexName}': {createResponse.DebugInformation}");
+
+        logger.LogInformation("Index '{Index}' created successfully.", IndexName);
+    }
+
+    private static async Task SeedIfEmptyAsync(ElasticsearchClient client, ILogger logger)
+    {
         var countResponse = await client.CountAsync(new CountRequest(IndexName));
-        if (countResponse.Count == 0)
-        {
-            logger.LogInformation("Seeding {Count} users into Elasticsearch", SeedUsers.Length);
-            var bulkResponse = await client.BulkAsync(b => b
-                .IndexMany(SeedUsers, (op, doc) => op.Index(IndexName).Id(doc.Id))
-            );
+        if (!countResponse.IsValidResponse)
+            throw new Exception($"Failed to count documents in '{IndexName}': {countResponse.DebugInformation}");
 
-            if (bulkResponse.Errors)
-                logger.LogError("Seed bulk index had errors: {Errors}", bulkResponse.ItemsWithErrors.Count());
+        if (countResponse.Count > 0)
+        {
+            logger.LogInformation("Index '{Index}' already has {Count} documents — skipping seed.", IndexName, countResponse.Count);
+            return;
         }
+
+        logger.LogInformation("Seeding {Count} users into Elasticsearch.", SeedUsers.Length);
+        var bulkResponse = await client.BulkAsync(b => b
+            .IndexMany(SeedUsers, (op, doc) => op.Index(IndexName).Id(doc.Id))
+        );
+
+        if (bulkResponse.Errors)
+            logger.LogError("Seed bulk index had errors: {Count} failed.", bulkResponse.ItemsWithErrors.Count());
+        else
+            logger.LogInformation("Seeded {Count} users successfully.", SeedUsers.Length);
     }
 }
