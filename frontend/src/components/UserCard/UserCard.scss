@@ -1,0 +1,28 @@
+.user-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px 24px;
+  min-width: 200px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  &__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: #111827;
+  }
+
+  &__job {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 12px;
+  }
+
+  &__phone,
+  &__email {
+    font-size: 0.875rem;
+    color: #374151;
+    margin: 4px 0 0;
+  }
+}

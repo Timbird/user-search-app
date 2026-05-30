@@ -1,0 +1,12 @@
+.user-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+
+  &__empty {
+    margin-top: 24px;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+}
