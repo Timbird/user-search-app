@@ -9,7 +9,7 @@ namespace UserSearch.Api.Controllers;
 public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpGet("autocomplete")]
-    public async Task<IActionResult> Autocomplete([FromQuery] string q)
+    public async Task<IActionResult> Autocomplete([FromQuery] string? q)
     {
         if (string.IsNullOrWhiteSpace(q) || q.Length < 2)
             return Ok(Array.Empty<string>());
@@ -19,7 +19,7 @@ public class UsersController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string q)
+    public async Task<IActionResult> Search([FromQuery] string? q)
     {
         if (string.IsNullOrWhiteSpace(q))
             return Ok(Array.Empty<User>());
