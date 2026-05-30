@@ -46,18 +46,17 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
-        var response = await client.SearchAsync<UserDocument>(s => s
+        var response = await client.CountAsync<UserDocument>(s => s
             .Indices(IndexName)
-            .Size(1)
             .Query(q => q
                 .Term(t => t
-                    .Field("email")
+                    .Field(f => f.Email)
                     .Value(email.ToLowerInvariant())
                 )
             )
         );
 
-        return response.Total > 0;
+        return response.Count > 0;
     }
 
     public async Task<User> CreateAsync(User user)
