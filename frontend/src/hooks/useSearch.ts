@@ -8,10 +8,15 @@ export function useSearch() {
   const [results, setResults] = useState<User[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipAutocompleteRef = useRef(false);
 
   useEffect(() => {
     if (query.length < 2) {
       setSuggestions([]);
+      return;
+    }
+    if (skipAutocompleteRef.current) {
+      skipAutocompleteRef.current = false;
       return;
     }
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -30,6 +35,7 @@ export function useSearch() {
   }, []);
 
   const selectSuggestion = useCallback((name: string) => {
+    skipAutocompleteRef.current = true;
     setQuery(name);
     runSearch(name);
   }, [runSearch]);

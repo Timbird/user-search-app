@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function NewUserForm({ onSuccess, onClose }: Props) {
-  const { form, errors, submitting, serverError, handleChange, handleSubmit, reset } =
+  const { form, errors, submitting, serverError, handleChange, handleSubmit } =
     useCreateUser(user => {
       onSuccess(user);
       onClose();
