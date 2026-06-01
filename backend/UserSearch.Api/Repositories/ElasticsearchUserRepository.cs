@@ -1,5 +1,4 @@
 using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.Core.Search;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using UserSearch.Api.Models;
 

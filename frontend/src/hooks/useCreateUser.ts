@@ -53,7 +53,5 @@ export function useCreateUser(onSuccess: (user: User) => void) {
     }
   };
 
-  const reset = () => { setForm(empty); setErrors({}); setServerError(null); };
-
-  return { form, errors, submitting, serverError, handleChange, handleSubmit, reset };
+  return { form, errors, submitting, serverError, handleChange, handleSubmit };
 }

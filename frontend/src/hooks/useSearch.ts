@@ -40,12 +40,6 @@ export function useSearch() {
     runSearch(name);
   }, [runSearch]);
 
-  const reset = useCallback(() => {
-    setQuery('');
-    setSuggestions([]);
-    setResults([]);
-    setHasSearched(false);
-  }, []);
 
-  return { query, setQuery, suggestions, results, hasSearched, runSearch, selectSuggestion, reset };
+  return { query, setQuery, suggestions, results, hasSearched, runSearch, selectSuggestion };
 }
