@@ -4,7 +4,7 @@ A full-stack user search application.
 
 ## Tech Stack
 
-- **Frontend:** React 18 + TypeScript + SCSS (Vite)
+- **Frontend:** React 19 + TypeScript + SCSS (Vite)
 - **Backend:** .NET 10 Web API (C#)
 - **Search:** Elasticsearch 9 — edge_ngram analyzer for word-level prefix matching
 
@@ -27,9 +27,15 @@ A full-stack user search application.
 docker-compose up --build
 ```
 
+### Without Kibana
+```bash
+docker-compose up --build elasticsearch backend frontend
+```
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000
 - Elasticsearch: http://localhost:9200
+- Kibana: http://localhost:5601 _(development only — can run )_
 
 ## Local Development
 

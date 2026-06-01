@@ -95,6 +95,24 @@ public class UsersControllerTests
         Assert.Equal(0, body.Total);
     }
 
+    [Fact]
+    public async Task Search_WithFromOffset_SkipsResults()
+    {
+        var firstResponse = await _client.GetAsync("/api/users/search?q=smith&from=0");
+        firstResponse.EnsureSuccessStatusCode();
+        var firstBody = await firstResponse.Content.ReadFromJsonAsync<SearchResponse>();
+        Assert.NotNull(firstBody);
+        Assert.True(firstBody.Total >= 2, "Need at least 2 Smith users to test offset");
+
+        // Requesting the last item by index should return exactly 1 result
+        var response = await _client.GetAsync($"/api/users/search?q=smith&from={firstBody.Total - 1}");
+        response.EnsureSuccessStatusCode();
+        var body = await response.Content.ReadFromJsonAsync<SearchResponse>();
+        Assert.NotNull(body);
+        Assert.Single(body.Users);
+        Assert.Equal(firstBody.Total, body.Total);
+    }
+
     private record SearchResponse(User[] Users, long Total);
 
     // --- Create ---

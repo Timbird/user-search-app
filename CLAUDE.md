@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Monorepo: React frontend + .NET 8 backend + Elasticsearch. User search with autocomplete.
+Monorepo: React frontend + .NET 10 backend + Elasticsearch. User search with autocomplete.
 
 ## Directory Map
 

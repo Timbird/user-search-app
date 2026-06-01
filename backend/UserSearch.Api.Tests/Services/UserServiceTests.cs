@@ -47,6 +47,17 @@ public class UserServiceTests
         Assert.Equal(1L, total);
     }
 
+    [Fact]
+    public async Task SearchAsync_PassesFromToRepository()
+    {
+        _repoMock.Setup(r => r.SearchAsync("walker", 25)).ReturnsAsync((new List<User>(), 30L));
+
+        var (_, total) = await _sut.SearchAsync("walker", 25);
+
+        _repoMock.Verify(r => r.SearchAsync("walker", 25), Times.Once);
+        Assert.Equal(30L, total);
+    }
+
     // ── CreateAsync ──────────────────────────────────────────────────────────
 
     [Fact]
