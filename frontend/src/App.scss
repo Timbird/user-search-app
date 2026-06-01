@@ -55,6 +55,34 @@ body {
     padding-bottom: 80px;
   }
 
+  &__load-more {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 8px;
+  }
+
+  &__load-more-btn {
+    padding: 10px 32px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: transparent;
+    color: #e6235c;
+    border: 2px solid #e6235c;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #e6235c;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+
   &__bottom {
     position: fixed;
     bottom: 0;

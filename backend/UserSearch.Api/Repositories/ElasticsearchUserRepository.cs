@@ -28,11 +28,12 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
             .Distinct();
     }
 
-    public async Task<IEnumerable<User>> SearchAsync(string query)
+    public async Task<(IEnumerable<User> Users, long Total)> SearchAsync(string query, int from)
     {
         var response = await client.SearchAsync<UserDocument>(s => s
             .Indices(IndexName)
-            .Size(50)
+            .From(from)
+            .Size(25)
             .Query(q => q
                 .MultiMatch(mm => mm
                     .Query(query)
@@ -42,7 +43,7 @@ public class ElasticsearchUserRepository(ElasticsearchClient client) : IUserRepo
             )
         );
 
-        return response.Documents.Select(d => d.ToUser());
+        return (response.Documents.Select(d => d.ToUser()), response.Total);
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)

@@ -8,7 +8,7 @@ import type { User } from './types/user';
 import './App.scss';
 
 export default function App() {
-  const { query, setQuery, suggestions, results, hasSearched, runSearch, selectSuggestion } =
+  const { query, setQuery, suggestions, results, hasSearched, runSearch, selectSuggestion, loadMore, hasMore, isLoadingMore } =
     useSearch();
   const [showForm, setShowForm] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -36,6 +36,17 @@ export default function App() {
       <main className="app__main">
         <div className="app__container">
           <UserCardList users={results} hasSearched={hasSearched} />
+          {hasMore && (
+            <div className="app__load-more">
+              <button
+                className="app__load-more-btn"
+                onClick={loadMore}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? 'Loading...' : 'Load More'}
+              </button>
+            </div>
+          )}
         </div>
       </main>
 

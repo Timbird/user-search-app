@@ -8,9 +8,9 @@ export async function autocomplete(q: string): Promise<string[]> {
   return res.json();
 }
 
-export async function search(q: string): Promise<User[]> {
-  const res = await fetch(`${BASE}/search?q=${encodeURIComponent(q)}`);
-  if (!res.ok) return [];
+export async function search(q: string, from = 0): Promise<{ users: User[]; total: number }> {
+  const res = await fetch(`${BASE}/search?q=${encodeURIComponent(q)}&from=${from}`);
+  if (!res.ok) return { users: [], total: 0 };
   return res.json();
 }
 

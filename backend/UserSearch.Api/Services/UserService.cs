@@ -8,8 +8,8 @@ public class UserService(IUserRepository repository) : IUserService
     public Task<IEnumerable<string>> AutocompleteAsync(string query) =>
         repository.AutocompleteAsync(query);
 
-    public Task<IEnumerable<User>> SearchAsync(string query) =>
-        repository.SearchAsync(query);
+    public Task<(IEnumerable<User> Users, long Total)> SearchAsync(string query, int from) =>
+        repository.SearchAsync(query, from);
 
     public async Task<(User? user, string? error)> CreateAsync(CreateUserRequest request)
     {

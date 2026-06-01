@@ -62,9 +62,10 @@ public class UsersControllerTests
         var response = await _client.GetAsync("/api/users/search?q=");
 
         response.EnsureSuccessStatusCode();
-        var results = await response.Content.ReadFromJsonAsync<User[]>();
-        Assert.NotNull(results);
-        Assert.Empty(results);
+        var body = await response.Content.ReadFromJsonAsync<SearchResponse>();
+        Assert.NotNull(body);
+        Assert.Empty(body.Users);
+        Assert.Equal(0, body.Total);
     }
 
     [Fact]
@@ -73,11 +74,11 @@ public class UsersControllerTests
         var response = await _client.GetAsync("/api/users/search?q=smith");
 
         response.EnsureSuccessStatusCode();
-        var results = await response.Content.ReadFromJsonAsync<User[]>();
-        Assert.NotNull(results);
-        Assert.NotEmpty(results);
+        var body = await response.Content.ReadFromJsonAsync<SearchResponse>();
+        Assert.NotNull(body);
+        Assert.NotEmpty(body.Users);
         // Seeded: Alex Smith, Kathy Smith, Hayley Walker-Smith
-        Assert.Contains(results, u =>
+        Assert.Contains(body.Users, u =>
             u.LastName.Contains("Smith", StringComparison.OrdinalIgnoreCase) ||
             u.FirstName.Contains("Smith", StringComparison.OrdinalIgnoreCase));
     }
@@ -88,10 +89,13 @@ public class UsersControllerTests
         var response = await _client.GetAsync("/api/users/search?q=zzznomatch");
 
         response.EnsureSuccessStatusCode();
-        var results = await response.Content.ReadFromJsonAsync<User[]>();
-        Assert.NotNull(results);
-        Assert.Empty(results);
+        var body = await response.Content.ReadFromJsonAsync<SearchResponse>();
+        Assert.NotNull(body);
+        Assert.Empty(body.Users);
+        Assert.Equal(0, body.Total);
     }
+
+    private record SearchResponse(User[] Users, long Total);
 
     // --- Create ---
 

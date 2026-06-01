@@ -19,13 +19,13 @@ public class UsersController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string? q)
+    public async Task<IActionResult> Search([FromQuery] string? q, [FromQuery] int from = 0)
     {
         if (string.IsNullOrWhiteSpace(q))
-            return Ok(Array.Empty<User>());
+            return Ok(new { users = Array.Empty<User>(), total = 0 });
 
-        var results = await userService.SearchAsync(q.Trim());
-        return Ok(results);
+        var (users, total) = await userService.SearchAsync(q.Trim(), from);
+        return Ok(new { users, total });
     }
 
     [HttpPost]

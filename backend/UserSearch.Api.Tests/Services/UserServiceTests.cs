@@ -38,12 +38,13 @@ public class UserServiceTests
         {
             new() { Id = "1", FirstName = "Phil", LastName = "Walker", JobTitle = "Senior QA", Phone = "07889 984447", Email = "pwalker@test.com" }
         };
-        _repoMock.Setup(r => r.SearchAsync("walker")).ReturnsAsync(users);
+        _repoMock.Setup(r => r.SearchAsync("walker", 0)).ReturnsAsync((users, 1L));
 
-        var result = await _sut.SearchAsync("walker");
+        var (result, total) = await _sut.SearchAsync("walker", 0);
 
         Assert.Single(result);
         Assert.Equal("Phil", result.First().FirstName);
+        Assert.Equal(1L, total);
     }
 
     // ── CreateAsync ──────────────────────────────────────────────────────────
